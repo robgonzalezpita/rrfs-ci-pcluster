@@ -97,17 +97,17 @@ sudo rm -rf /tmp/hpc-Stack
 # Rocoto
 
 # Clone & install Rocoto
-sudo mkdir /scratch1/rocoto
-sudo chmod 777 /scratch1/rocoto
-git clone -b develop https://github.com/christopherwharrop/rocoto.git /scratch1/rocoto/develop
-pushd /scratch1/rocoto/develop
-./INSTALL
+# sudo mkdir /scratch1/rocoto
+# sudo chmod 777 /scratch1/rocoto
+# git clone -b develop https://github.com/christopherwharrop/rocoto.git /scratch1/rocoto/develop
+# pushd /scratch1/rocoto/develop
+# ./INSTALL
 
-# Make a Module for rocoto
-sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
-echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-echo 'prepend-path PATH /scratch1/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+# # Make a Module for rocoto
+# sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
+# echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+# echo 'prepend-path PATH /scratch1/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+# echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
 
 
 #====================================================================
@@ -159,13 +159,28 @@ echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/
 
 # #====================================================================
 
+# Untar data from s3
+
+# cd /scratch1
+# tar -xvf gst_model_data.tar.gz
+
+# #====================================================================
+
 # # Generate Workflow Experiment following these steps:
 
 # # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
 
+
+# cd ../regional_workflow/ush
+# mv ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
+# source /scratch1/build_pcluster_intel.env
+
+# ./generate_FV3LAM_wflow.sh
+
 # #====================================================================
 
 # # Run the Workflow Using Rocoto
+
 
 
 # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
