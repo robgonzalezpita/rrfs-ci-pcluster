@@ -34,7 +34,7 @@ sudo apt-get install git
 
 Clone and enter this repository:
 ```
-git clone main https://github.com/robgonzalezpita/rrfs-ci-pcluster.git
+git clone -b main https://github.com/robgonzalezpita/rrfs-ci-pcluster.git
 cd rrfs-ci-pcluster
 ```
 

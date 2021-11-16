@@ -7,8 +7,8 @@ EXPT_SUBDIR="pcluster_test"
 WORKFLOW_MANAGER="rocoto"
 SCHED="slurm"
 
-# LMOD_PATH="/usr/share/lmod/lmod/init/sh"
-LMOD_PATH="/usr/share/lmod/lmod/init/bash"
+
+LMOD_PATH="/scratch1/apps/lmod/lmod/init/bash"
 BUILD_ENV_FN="build_linux_intel.env"
 
 COMPILER="intel"

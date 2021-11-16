@@ -96,6 +96,8 @@ sudo rm -rf /tmp/hpc-Stack
 
 # Rocoto
 
+#sudo su
+
 # Clone & install Rocoto
 # sudo mkdir /scratch1/rocoto
 # sudo chmod 777 /scratch1/rocoto
@@ -104,11 +106,15 @@ sudo rm -rf /tmp/hpc-Stack
 # ./INSTALL
 
 # # Make a Module for rocoto
-# sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
+# sudo su
+
+# mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
+# sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto
 # echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
 # echo 'prepend-path PATH /scratch1/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
 # echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
 
+# exit
 
 #====================================================================
 
