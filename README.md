@@ -22,15 +22,19 @@ SSH into the cluster:
 ssh ubuntu@<ip_address>
 ```
 
+You will get a message about the authenticity of the host, enter `yes`.
+
+## Once connected to the PCluster Head node
+
 Install git:
 
 ```
-sudo apt-get install git 
+sudo apt-get install git
 ```
 
 Clone and enter this repository:
 ```
-git clone https://github.com/robgonzalezpita/rrfs-ci-pcluster.git
+git clone main https://github.com/robgonzalezpita/rrfs-ci-pcluster.git
 cd rrfs-ci-pcluster
 ```
 
