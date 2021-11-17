@@ -80,7 +80,7 @@ cd /scratch1
 source ~/.bash_profile
 mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
 sudo chmod 777 /tmp/hpc-stack
-git clone -b rrfs_ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
+git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
 pushd /tmp/hpc-stack
 mkdir /scratch1/hpc-stack
 sudo chmod 777 /scratch1/hpc-stack
