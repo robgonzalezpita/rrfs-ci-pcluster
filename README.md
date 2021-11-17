@@ -43,7 +43,7 @@ Source the post_install.sh script:
 source post_install.sh 2>&1 | tee post_install_build.out
 ```
 
-Follow outline of commented code in [post_install.sh](post_install.sh) to setup Python Environment, Clone ufs-srwa, [Generate the Experiment](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment), and [Run the Workflow Using Rocoto](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto)
+Follow the general outline of commented code in [post_install.sh](post_install.sh) to setup Python Environment, Clone ufs-srwa, [Generate the Workflow Experiment](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment), and [Run the Workflow Using Rocoto](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto)
 
 
 Delete the PCluster:

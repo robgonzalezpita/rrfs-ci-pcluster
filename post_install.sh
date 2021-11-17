@@ -13,8 +13,6 @@
 
 # General Dependencies & update
 
-cd "$HOME"
-
 sudo apt-get update -y
 sudo apt-get install -y wget
 sudo apt-get install -y git
@@ -94,27 +92,33 @@ sudo rm -rf /tmp/hpc-Stack
 
 #=================================================================
 
-# Rocoto
+# Clone & Install Rocoto
 
-#sudo su
-
-# Clone & install Rocoto
-# sudo mkdir /scratch1/rocoto
-# sudo chmod 777 /scratch1/rocoto
-# git clone -b develop https://github.com/christopherwharrop/rocoto.git /scratch1/rocoto/develop
-# pushd /scratch1/rocoto/develop
-# ./INSTALL
+# sudo mkdir /opt/rocoto
+# sudo chmod 777 /opt/rocoto
+# sudo git clone -b develop https://github.com/christopherwharrop/rocoto.git /opt/rocoto/develop
+# sudo git -C /opt/rocoto/develop/ checkout tags/1.3.4
+# pushd /opt/rocoto/develop
+# sudo ./INSTALL
 
 # # Make a Module for rocoto
-# sudo su
+# sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
 
-# mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
 # sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto
 # echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-# echo 'prepend-path PATH /scratch1/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-# echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+# echo 'prepend-path PATH /opt/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+# echo 'prepend-path MANPATH /opt/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
 
-# exit
+## OR MAKE A .lua module
+
+# touch /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
+# sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
+# echo 'help([[ ]])' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
+# echo 'setenv(       "ROCOTOPATH",        "/opt/rocoto/develop/bin")' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
+# echo 'prepend_path( "PATH",              "/opt/rocoto/develop/bin")' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
+# echo 'prepend_path( "MANPATH",           "/opt/rocoto/develop/man")' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
+
+# popd
 
 #====================================================================
 
@@ -126,8 +130,6 @@ sudo rm -rf /tmp/hpc-Stack
 # # bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 # # rm -rf ~/miniconda3/miniconda.sh
 # # ~/miniconda3/bin/conda init bash
-
-# # conda config --set auto_activate_base false
 
 # # source ~/.bash_profile
 
@@ -173,12 +175,16 @@ sudo rm -rf /tmp/hpc-Stack
 # #====================================================================
 
 # # Generate Workflow Experiment following these steps:
-
 # # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
-
 
 # cd ../regional_workflow/ush
 # mv ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
+
+# Create a ../../env/wflow_linux.env file containing:
+# module load rocoto
+# conda activate base
+
+
 # source /scratch1/build_pcluster_intel.env
 
 # ./generate_FV3LAM_wflow.sh
@@ -186,10 +192,16 @@ sudo rm -rf /tmp/hpc-Stack
 # #====================================================================
 
 # # Run the Workflow Using Rocoto
-
-
-
 # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
 
+
+# cd $EXPTDIR
+# rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+# rocotostat -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+
+# add to crontab 
+
+# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test && ./launch_FV3LAM_wflow.sh
+# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test &&rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
 
 # #====================================================================
