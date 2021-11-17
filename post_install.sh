@@ -88,7 +88,7 @@ prefix=/scratch1/hpc-stack
 yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
 ./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
 popd
-sudo rm -rf /tmp/hpc-Stack
+# sudo rm -rf /tmp/hpc-stack
 
 #=================================================================
 
