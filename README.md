@@ -43,10 +43,15 @@ Source the post_install.sh script:
 source post_install.sh 2>&1 | tee post_install_build.out
 ```
 
+## Set up Slurm Accouting on the Parallel Cluster
+https://aws.amazon.com/blogs/compute/enabling-job-accounting-for-hpc-with-aws-parallelcluster-and-amazon-rds/
+
+## Build the model and run the workflow
+
 Follow the general outline of commented code in [post_install.sh](post_install.sh) to setup Python Environment, Clone ufs-srwa, [Generate the Workflow Experiment](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment), and [Run the Workflow Using Rocoto](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto)
 
 
-Delete the PCluster:
+### Delete the PCluster:
 ```
 pcluster delete <clustername>
 ```

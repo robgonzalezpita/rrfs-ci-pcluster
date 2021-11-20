@@ -94,114 +94,149 @@ popd
 
 # Clone & Install Rocoto
 
-# sudo mkdir /opt/rocoto
-# sudo chmod 777 /opt/rocoto
-# sudo git clone -b develop https://github.com/christopherwharrop/rocoto.git /opt/rocoto/develop
-# sudo git -C /opt/rocoto/develop/ checkout tags/1.3.4
-# pushd /opt/rocoto/develop
+# sudo mkdir /scratch1/rocoto
+# sudo chmod 777 /scratch1/rocoto
+# sudo git clone -b develop https://github.com/christopherwharrop/rocoto.git /scratch1/rocoto/develop
+# sudo git -C /scratch1/rocoto/develop/ checkout tags/1.3.4
+# pushd /scratch1/rocoto/develop
 # sudo ./INSTALL
 
-# # Make a Module for rocoto
+# # # Make a Module for rocoto
 # sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
-
 # sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto
 # echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-# echo 'prepend-path PATH /opt/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-# echo 'prepend-path MANPATH /opt/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-
-## OR MAKE A .lua module
-
-# touch /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
-# sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
-# echo 'help([[ ]])' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
-# echo 'setenv(       "ROCOTOPATH",        "/opt/rocoto/develop/bin")' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
-# echo 'prepend_path( "PATH",              "/opt/rocoto/develop/bin")' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
-# echo 'prepend_path( "MANPATH",           "/opt/rocoto/develop/man")' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/1.3.4.lua
-
+# echo 'prepend-path PATH /scratch1/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+# echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
 # popd
+
+# ====================================================================
+
+# Python Environment
+
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+chmod +x ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+~/miniconda3/bin/conda init bash
+
+#This might be it, instead of comments below
+# source ~/miniconda3/etc/profile.d/conda.sh
+
+source ~/.bash_profile
+# source ~/.bashrc
+
+
+
+conda install -y jinja2
+conda install -y pyyaml
+conda install -y -c conda-forge f90nml
+
+##############################################
+# properly initialize conda environment for scripts to set it up within subshells??
+
+
+# # >>> conda initialize >>>
+# # !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/home/ubuntu/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/home/ubuntu/miniconda3/etc/profile.d/conda.sh" ]; then
+#         . "/home/ubuntu/miniconda3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/home/ubuntu/miniconda3/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# # <<< conda initialize <<<
+
+##############################################
 
 #====================================================================
 
-# # Python Environment
+# Clone and Build ufs-srwa & regional_workflow
 
-# # mkdir -p ~/miniconda3
-# # wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-# # chmod +x ~/miniconda3/miniconda.sh
-# # bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-# # rm -rf ~/miniconda3/miniconda.sh
-# # ~/miniconda3/bin/conda init bash
+cd "$HOME"
 
-# # source ~/.bash_profile
+# Clone, Build, ./manage_externals/checkout_externals of UFS SRWA
+# git clone -b rrfs_ci https://github.com/NOAA-GSL/ufs-srweather-app.git
+git clone -b linux_target https://github.com/robgonzalezpita/ufs-srweather-app.git
+# which points to Christina's RRFS linux_target branch https://github.com/christinaholtNOAA/regional_workflow/tree/linux_target
+cd ufs-srweather-app
+./manage_externals/checkout_externals
 
-# # conda install -y jinja2
-# # conda install -y pyyaml
-# # conda install -y -c conda-forge f90nml
+# Checkout up to bugfix/namelist-io branch of Chris'ufs-weather-model/FV3/atmos_cubed_sphere for bugfix
+cd src/ufs-weather-model/FV3/
+mv atmos_cubed_sphere atmos_cubed_sphere.orig
+git clone https://github.com/christopherwharrop-noaa/GFDL_atmos_cubed_sphere.git atmos_cubed_sphere
+cd atmos_cubed_sphere
+git checkout bugfix/namelist-io
 
-# # #====================================================================
+cd ~/ufs-srweather-app/
 
-# # Clone and Build ufs-srwa & regional_workflow
+# Set up the Build Environment
+# Scratch1 is mounted upon PCluster creation, so we can source this file directly 
+source /scratch1/build_pcluster_intel.env
 
-# cd "$HOME"
+mkdir build && cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=.. | tee log.cmake
+make -j4 >& build.out &
 
-# # Clone, Build, ./manage_externals/checkout_externals of UFS SRWA
-# # git clone -b rrfs_ci https://github.com/NOAA-GSL/ufs-srweather-app.git
-# git clone -b linux_target https://github.com/robgonzalezpita/ufs-srweather-app.git
-# cd ufs-srweather-app
-# ./manage_externals/checkout_externals
-
-# # Checkout up to bugfix/namelist-io branch of Chris'ufs-weather-model/FV3/atmos_cubed_sphere for bugfix
-# cd src/ufs-weather-model/FV3/
-# mv atmos_cubed_sphere atmos_cubed_sphere.orig
-# git clone https://github.com/christopherwharrop-noaa/GFDL_atmos_cubed_sphere.git atmos_cubed_sphere
-# cd atmos_cubed_sphere
-# git checkout bugfix/namelist-io
-
-# cd ~/ufs-srweather-app/
-
-# # Scratch1 is mounted upon PCluster creation, so we can source this file directly 
-# source /scratch1/build_pcluster_intel.env
-
-# mkdir build && cd build
-# cmake .. -DCMAKE_INSTALL_PREFIX=.. | tee log.cmake
-# make -j4 >& build.out &
-
-# #====================================================================
+#====================================================================
 
 # Untar data from s3
 
-# cd /scratch1
-# tar -xvf gst_model_data.tar.gz
+cd /scratch1
+tar -xvf gst_model_data.tar.gz
 
-# #====================================================================
+# add s3://gsl-ufs/missing/ data to correct directories ()
 
-# # Generate Workflow Experiment following these steps:
-# # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
+#====================================================================
 
-# cd ../regional_workflow/ush
-# mv ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
+# Generate Workflow Experiment following these steps:
+# https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
 
-# Create a ../../env/wflow_linux.env file containing:
-# module load rocoto
+cd ~/ufs-srweather-app/regional_workflow/ush
+mv ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
+
+
+## FLESH THIS OUT!!
+
+# Set up python environment in create a ../../env/wflow_linux.env file 
+# mv ~/rrfs-ci-pcluster/wflow_linux.env ../../wflow_linux.env
+# mv ~/rrfs-ci-pcluster/wflow_linux.env wflow_linux.env
+
+source ../../env/wflow_linux.env
+# module use /scratch1/apps/lmod/lmod/modulefiles
+# module load rocoto/develop
 # conda activate base
 
+# add following to ush/load_modules_run_task.sh (line 105)
+#
+#   "LINUX")
+    # . /scratch1/apps/lmod/lmod/init/sh
+    # ;;
 
-# source /scratch1/build_pcluster_intel.env
+cp /scratch1/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_intel.env
 
-# ./generate_FV3LAM_wflow.sh
 
-# #====================================================================
+./generate_FV3LAM_wflow.sh
 
-# # Run the Workflow Using Rocoto
+#====================================================================
+
+# Run the Workflow Using Rocoto
 # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
 
 
-# cd $EXPTDIR
+cd $EXPTDIR
+./launch_FV3LAM_wflow.sh
 # rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
 # rocotostat -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
 
 # add to crontab 
 
-# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test && ./launch_FV3LAM_wflow.sh
-# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test &&rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+*/3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test && ./launch_FV3LAM_wflow.sh
+*/3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test1 && rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
 
-# #====================================================================
+#====================================================================

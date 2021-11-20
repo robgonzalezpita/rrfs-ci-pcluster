@@ -3,6 +3,7 @@
 MACHINE="LINUX"
 ACCOUNT="my_account"
 EXPT_SUBDIR="pcluster_test"
+EXPT_BASEDIR="/scratch1/expts_dir"
 
 WORKFLOW_MANAGER="rocoto"
 SCHED="slurm"
@@ -49,6 +50,8 @@ NDAS_OBS_DIR="/path/to/processed/NDAS/data"
 # NCORES_PER_NODE=8
 NCORES_PER_NODE=36  # Up to 72 for c5n18xlarge instances?
 
+USE_CRON_TO_RELAUNCH="TRUE"
+CRON_RELAUNCH_INTVL_MNTS="02"
 
 PARTITION_DEFAULT="compute"
 QUEUE_DEFAULT="compute"
@@ -68,16 +71,14 @@ RUN_TASK_VX_POINTSTAT="FALSE"
 RUN_TASK_VX_ENSGRID="FALSE"
 RUN_TASK_VX_ENSPOINT="FALSE"
 
-# The following are specifically for PCLUSTER 
-FIXgsm=${FIXgsm:-"/scratch1/fix_am"}
-TOPO_DIR=${TOPO_DIR:-"/scratch1/fix_orog"}
-SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/fix_sfc_climo"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch1"}
+# RUN_CMD_FCST="mpriun -np 12"
 
-#Correct filepaths with new FSX mount 
-# FIXgsm="/scratch1/fix_am"
-# TOPO_DIR="/scratch1/fix_orog"
-# SFC_CLIMO_INPUT_DIR="/scratch1/sfc_climo"
+# The following are specifically for using the FSX mount of the /scratch1 dir (s3://gsl-ufs)
+# From PCLUSTER, cd /scratch1 && `tar -xvf gst_model_data.tar.gz`
+FIXgsm=${FIXgsm:-"/scratch1/fix/fix_am"}
+TOPO_DIR=${TOPO_DIR:-"/scratch1/fix/fix_orog"}
+SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/fix/fix_sfc_climo"}
+FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch1"}
 
 #
 # Uncomment the following line in order to use user-staged external model 
