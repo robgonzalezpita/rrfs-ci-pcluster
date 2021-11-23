@@ -88,26 +88,26 @@ prefix=/scratch1/hpc-stack
 yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
 ./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
 popd
-# sudo rm -rf /tmp/hpc-stack
+sudo rm -rf /tmp/hpc-stack
 
 #=================================================================
 
 # Clone & Install Rocoto
 
-# sudo mkdir /scratch1/rocoto
-# sudo chmod 777 /scratch1/rocoto
-# sudo git clone -b develop https://github.com/christopherwharrop/rocoto.git /scratch1/rocoto/develop
-# sudo git -C /scratch1/rocoto/develop/ checkout tags/1.3.4
-# pushd /scratch1/rocoto/develop
-# sudo ./INSTALL
+sudo mkdir /scratch1/rocoto
+sudo chmod 777 /scratch1/rocoto
+sudo git clone -b develop https://github.com/christopherwharrop/rocoto.git /scratch1/rocoto/develop
+sudo git -C /scratch1/rocoto/develop/ checkout tags/1.3.4
+pushd /scratch1/rocoto/develop
+sudo ./INSTALL
 
-# # # Make a Module for rocoto
-# sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
-# sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto
-# echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-# echo 'prepend-path PATH /scratch1/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-# echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
-# popd
+# # Make a Module for rocoto
+sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
+sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto
+echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+echo 'prepend-path PATH /scratch1/rocoto/develop/bin' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+echo 'prepend-path MANPATH /scratch1/rocoto/develop/man' >> /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
+popd
 
 # ====================================================================
 
@@ -120,12 +120,9 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 
-#This might be it, instead of comments below
-# source ~/miniconda3/etc/profile.d/conda.sh
-
-source ~/.bash_profile
-# source ~/.bashrc
-
+# Sloppy, but might work?
+# source ~/.bash_profile
+source ~/.bashrc
 
 
 conda install -y jinja2
@@ -133,8 +130,10 @@ conda install -y pyyaml
 conda install -y -c conda-forge f90nml
 
 ##############################################
-# properly initialize conda environment for scripts to set it up within subshells??
 
+# Need to correctly make miniconda environment available to subshells
+# Either make miniconda a module, or insert below commented code into ~/.bash_profile, /etc/profile.d
+# properly initialize conda environment for scripts to set it up within subshells??
 
 # # >>> conda initialize >>>
 # # !! Contents within this block are managed by 'conda init' !!
@@ -177,7 +176,7 @@ cd ~/ufs-srweather-app/
 
 # Set up the Build Environment
 # Scratch1 is mounted upon PCluster creation, so we can source this file directly 
-source /scratch1/build_pcluster_intel.env
+source /scratch1/build_linux_intel.env
 
 mkdir build && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=.. | tee log.cmake
@@ -194,49 +193,49 @@ tar -xvf gst_model_data.tar.gz
 
 #====================================================================
 
-# Generate Workflow Experiment following these steps:
-# https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
+# # Generate Workflow Experiment following these steps:
+# # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
 
-cd ~/ufs-srweather-app/regional_workflow/ush
-mv ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
-
-
-## FLESH THIS OUT!!
-
-# Set up python environment in create a ../../env/wflow_linux.env file 
-# mv ~/rrfs-ci-pcluster/wflow_linux.env ../../wflow_linux.env
-# mv ~/rrfs-ci-pcluster/wflow_linux.env wflow_linux.env
-
-source ../../env/wflow_linux.env
-# module use /scratch1/apps/lmod/lmod/modulefiles
-# module load rocoto/develop
-# conda activate base
-
-# add following to ush/load_modules_run_task.sh (line 105)
-#
-#   "LINUX")
-    # . /scratch1/apps/lmod/lmod/init/sh
-    # ;;
-
-cp /scratch1/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_intel.env
+# cd ~/ufs-srweather-app/regional_workflow/ush
+# cp ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
 
 
-./generate_FV3LAM_wflow.sh
+# ## FLESH THIS OUT!!
 
-#====================================================================
+# # Set up python environment in create a ../../env/wflow_linux.env file 
+# # mv ~/rrfs-ci-pcluster/wflow_linux.env ../../wflow_linux.env
+# # mv ~/rrfs-ci-pcluster/wflow_linux.env wflow_linux.env
 
-# Run the Workflow Using Rocoto
-# https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
+# source ../../env/wflow_linux.env
+# # module use /scratch1/apps/lmod/lmod/modulefiles
+# # module load rocoto/develop
+# # conda activate base
+
+# # add following to ush/load_modules_run_task.sh (line 105)
+# #
+# #   "LINUX")
+#     # . /scratch1/apps/lmod/lmod/init/sh
+#     # ;;
+
+# cp /scratch1/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_intel.env
 
 
-cd $EXPTDIR
-./launch_FV3LAM_wflow.sh
-# rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
-# rocotostat -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+# ./generate_FV3LAM_wflow.sh
 
-# add to crontab 
+# #====================================================================
 
-*/3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test && ./launch_FV3LAM_wflow.sh
-*/3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test1 && rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+# # Run the Workflow Using Rocoto
+# # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
 
-#====================================================================
+
+# cd $EXPTDIR
+# ./launch_FV3LAM_wflow.sh
+# # rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+# # rocotostat -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+
+# # add to crontab 
+
+# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test && ./launch_FV3LAM_wflow.sh
+# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test1 && rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
+
+# #====================================================================
