@@ -3,15 +3,17 @@
 # This script will serve as the post-install for AWS PCluster (Ubuntu 20.04)
 # Use of hpc stack to install all dependencies to UFS SRWA and RRFS for automated testing
 
-# In parallelcluster/config [fsx myfsx] shared_dir = /scratch1 must be specified for the compute nodes to correctly 
-# mount installed dependencies upon launch 
+# In parallelcluster/config [fsx myfsx] shared_dir = /scratch1 must be specified for the compute 
+# nodes to correctly mount installed dependencies upon launch.
+
 
 # Install & configure all the requirements in order to follow the Quickstart steps for the UFS SRWA:
-# https://ufs-srweather-app.readthedocs.io/en/latest/Quickstart.html
+# https://ufs-srweather-app.readthedocs.io/en/latest/Quickstart.html & create an environment to run 
+# continous integration tests for the regional_workflow
 
 #====================================================================
 
-# General Dependencies & update
+# Update & General Dependencies 
 
 sudo apt-get update -y
 sudo apt-get install -y wget
@@ -42,7 +44,7 @@ echo "source /opt/intel/oneapi/setvars.sh" >> ~/.bash_profile
 
 # Lmod and Lua install & configure into /scratch1/apps (need to be installed in a shared directory)
 # See https://lmod.readthedocs.io/en/latest/030_installing.html#install-lua-x-y-z-tar-gz
-# apt-get does not work here, as the default apt-get lua & lmod installion is not available to compute nodes
+# apt-get does not work here, as the default apt-get lua & lmod installion (usr/share) is not available to PCluster compute nodes
 
 # LUA
 mkdir /scratch1/apps && cd /scratch1/apps
@@ -58,7 +60,6 @@ cd /scratch1/apps
 wget https://github.com/TACC/Lmod/archive/refs/heads/master.zip -P /scratch1/apps
 unzip master.zip
 cd Lmod-master/
-#Below 'exports' might not be needed
 export PATH=$PATH:/scratch1/apps/lua/bin
 export LD_LIBRARY_PATH=/scratch1/apps/lua/lib
 export C_INCLUDE_PATH=/scratch1/apps/lua/include
@@ -101,7 +102,7 @@ sudo git -C /scratch1/rocoto/develop/ checkout tags/1.3.4
 pushd /scratch1/rocoto/develop
 sudo ./INSTALL
 
-# # Make a Module for rocoto
+# Make a Module for rocoto
 sudo mkdir /scratch1/apps/lmod/lmod/modulefiles/rocoto
 sudo chmod 777 /scratch1/apps/lmod/lmod/modulefiles/rocoto
 echo "#%Module1.0" > /scratch1/apps/lmod/lmod/modulefiles/rocoto/develop
@@ -113,6 +114,7 @@ popd
 
 # Python Environment
 
+# Miniconda3 install
 mkdir -p ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 chmod +x ~/miniconda3/miniconda.sh
@@ -120,67 +122,27 @@ bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm -rf ~/miniconda3/miniconda.sh
 ~/miniconda3/bin/conda init bash
 
-# Sloppy, but might work?
-# source ~/.bash_profile
-source ~/.bashrc
+# Make miniconda3 module, regional_workflow & pygraf environments
+cd ~/miniconda3
+git clone -b rrfs_ci https://github.com/robgonzalezpita/contrib_miniconda3.git
+module use -a ~/miniconda3/contrib_miniconda3/modulefiles
+module load miniconda3/4.11.0
 
+unset CONDA_ENVS_PATH
+unset CONDA_PKGS_PATH
 
-conda install -y jinja2
-conda install -y pyyaml
-conda install -y -c conda-forge f90nml
+conda env create -f ~/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
+conda env create -f ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
 
-##############################################
+conda create --name pygraf --file ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
 
-# Need to correctly make miniconda environment available to subshells
-# Either make miniconda a module, or insert below commented code into ~/.bash_profile, /etc/profile.d
-# properly initialize conda environment for scripts to set it up within subshells??
-
-# # >>> conda initialize >>>
-# # !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/home/ubuntu/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/home/ubuntu/miniconda3/etc/profile.d/conda.sh" ]; then
-#         . "/home/ubuntu/miniconda3/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/home/ubuntu/miniconda3/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# # <<< conda initialize <<<
-
-##############################################
-
-#====================================================================
-
-# Clone and Build ufs-srwa & regional_workflow
-
-cd "$HOME"
-
-# Clone, Build, ./manage_externals/checkout_externals of UFS SRWA
-# git clone -b rrfs_ci https://github.com/NOAA-GSL/ufs-srweather-app.git
-git clone -b linux_target https://github.com/robgonzalezpita/ufs-srweather-app.git
-# which points to Christina's RRFS linux_target branch https://github.com/christinaholtNOAA/regional_workflow/tree/linux_target
-cd ufs-srweather-app
-./manage_externals/checkout_externals
-
-# Checkout up to bugfix/namelist-io branch of Chris'ufs-weather-model/FV3/atmos_cubed_sphere for bugfix
-cd src/ufs-weather-model/FV3/
-mv atmos_cubed_sphere atmos_cubed_sphere.orig
-git clone https://github.com/christopherwharrop-noaa/GFDL_atmos_cubed_sphere.git atmos_cubed_sphere
-cd atmos_cubed_sphere
-git checkout bugfix/namelist-io
-
-cd ~/ufs-srweather-app/
-
-# Set up the Build Environment
-# Scratch1 is mounted upon PCluster creation, so we can source this file directly 
-source /scratch1/build_linux_intel.env
-
-mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=.. | tee log.cmake
-make -j4 >& build.out &
+# ensure the environments are set up correctly
+conda activate regional_workflow
+conda list 
+conda deactivate
+conda activate pygraf
+conda list
+conda deactivate
 
 #====================================================================
 
@@ -190,52 +152,6 @@ cd /scratch1
 tar -xvf gst_model_data.tar.gz
 
 # add s3://gsl-ufs/missing/ data to correct directories ()
+sudo cp /scratch1/missing/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_update/
 
-#====================================================================
-
-# # Generate Workflow Experiment following these steps:
-# # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
-
-# cd ~/ufs-srweather-app/regional_workflow/ush
-# cp ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
-
-
-# ## FLESH THIS OUT!!
-
-# # Set up python environment in create a ../../env/wflow_linux.env file 
-# # mv ~/rrfs-ci-pcluster/wflow_linux.env ../../wflow_linux.env
-# # mv ~/rrfs-ci-pcluster/wflow_linux.env wflow_linux.env
-
-# source ../../env/wflow_linux.env
-# # module use /scratch1/apps/lmod/lmod/modulefiles
-# # module load rocoto/develop
-# # conda activate base
-
-# # add following to ush/load_modules_run_task.sh (line 105)
-# #
-# #   "LINUX")
-#     # . /scratch1/apps/lmod/lmod/init/sh
-#     # ;;
-
-# cp /scratch1/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_intel.env
-
-
-# ./generate_FV3LAM_wflow.sh
-
-# #====================================================================
-
-# # Run the Workflow Using Rocoto
-# # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
-
-
-# cd $EXPTDIR
-# ./launch_FV3LAM_wflow.sh
-# # rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
-# # rocotostat -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
-
-# # add to crontab 
-
-# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test && ./launch_FV3LAM_wflow.sh
-# */3 * * * * cd /home/ubuntu/expt_dirs/pcluster_test1 && rocotorun -w FV3LAM_wflow.xml -d FV3LAM_wflow.db -v 10
-
-# #====================================================================
+# ====================================================================

@@ -25,15 +25,11 @@ placement = cluster
 #cluster_type = spot
 placement_group = DYNAMIC
 enable_efa = compute
-#post_install = s3://gsl-ufs/hpcstack_srwa_post_install.sh
+#post_install = s3://gsl-ufs/rrfs_ci_post_install.sh
 fsx_settings = myfsx
 disable_hyperthreading = true
 s3_read_write_resource = arn:aws:s3:::gsl-ufs/*
 tags = { "noaa:lineoffice" : "oar", "noaa:programoffice" : "50-37-0000", "noaa:fismaid" : "NOAA3500", "noaa:environment" : "dev", "noaa:taskorder" : "0044-0001AC", "noaa:oar:gsl:projectid" : "rrfs_ci", "Project" : "AVID", "Description" : "PCluster_test"}
-
-#custom_chef_cookbook = https://rrfs-ci-bucket.s3.amazonaws.com/aws-parallelcluster-cookbook-2.11.2.tgz
-#custom_chef_cookbook = s3://gsl-ufs/cookbook/aws-parallelcluster-cookbook-2.11.2.tgz
-#extra_json = { "cluster" : { "skip_install_recipes" : "no" } }
 
 [vpc default]
 vpc_id = vpc-09fdd078bfb55f7ba
@@ -42,8 +38,8 @@ compute_subnet_id = subnet-044ea96187bd4139d
 use_public_ips = false
 
 [fsx myfsx]
-shared_dir = /scratch1
 # fsx_fs_id = fs-0c7266cca918033ba
+shared_dir = /scratch1
 storage_capacity = 1200
 deployment_type = PERSISTENT_1
 per_unit_storage_throughput = 50
