@@ -40,7 +40,7 @@ cd rrfs-ci-pcluster
 
 Source the post_install.sh script:
 ```
-source post_install.sh 2>&1 | tee post_install_build.out
+source rrfs_ci_post_install.sh 2>&1 | tee rrfs_ci_post_install_build.out
 ```
 
 ## Build the model and run the workflow
@@ -52,4 +52,3 @@ Follow the general outline of commented code in [post_install.sh](post_install.s
 ```
 pcluster delete <clustername>
 ```
-

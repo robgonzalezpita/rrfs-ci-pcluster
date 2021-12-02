@@ -46,4 +46,3 @@ per_unit_storage_throughput = 50
 auto_import_policy = NEW_CHANGED
 import_path = s3://gsl-ufs
 export_path = s3://gsl-ufs/output
-

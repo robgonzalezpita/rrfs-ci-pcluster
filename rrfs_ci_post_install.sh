@@ -134,8 +134,6 @@ unset CONDA_PKGS_PATH
 conda env create -f ~/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
 conda env create -f ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
 
-conda create --name pygraf --file ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
-
 # ensure the environments are set up correctly
 conda activate regional_workflow
 conda list 
@@ -152,6 +150,9 @@ cd /scratch1
 tar -xvf gst_model_data.tar.gz
 
 # add s3://gsl-ufs/missing/ data to correct directories ()
-sudo cp /scratch1/missing/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_update/
+sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_update/
+
+sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
+sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/co2dat_4a/
 
 # ====================================================================
