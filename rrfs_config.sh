@@ -10,6 +10,7 @@ SCHED="slurm"
 
 
 LMOD_PATH="/scratch1/apps/lmod/lmod/init/bash"
+# LMOD_PATH="/scratch1/apps/lmod/lmod/init/sh"
 BUILD_ENV_FN="build_linux_intel.env"
 
 COMPILER="intel"
