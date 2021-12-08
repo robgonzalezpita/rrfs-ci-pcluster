@@ -48,8 +48,8 @@ CCPA_OBS_DIR="/path/to/processed/CCPA/data"
 MRMS_OBS_DIR="/path/to/processed/MRMS/data"
 NDAS_OBS_DIR="/path/to/processed/NDAS/data"
 
-# NCORES_PER_NODE=8
-NCORES_PER_NODE=36  # Up to 72 for c5n18xlarge instances?
+NCORES_PER_NODE=8 
+# NCORES_PER_NODE=36 # Up to 72 for c5n18xlarge instances?
 
 USE_CRON_TO_RELAUNCH="TRUE"
 CRON_RELAUNCH_INTVL_MNTS="02"

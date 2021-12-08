@@ -82,13 +82,13 @@ source ~/.bash_profile
 mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
 sudo chmod 777 /tmp/hpc-stack
 git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
-# pushd /tmp/hpc-stack
+pushd /tmp/hpc-stack
 mkdir /scratch1/hpc-stack
 sudo chmod 777 /scratch1/hpc-stack
 prefix=/scratch1/hpc-stack
 yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
 ./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
-# popd
+popd
 sudo rm -rf /tmp/hpc-stack
 
 #=================================================================
@@ -97,9 +97,9 @@ sudo rm -rf /tmp/hpc-stack
 
 sudo mkdir -p /scratch1/rocoto/develop
 sudo chmod 777 /scratch1/rocoto/develop
+pushd /scratch1/rocoto/develop
 sudo git clone -b develop https://github.com/christopherwharrop/rocoto.git /scratch1/rocoto/develop
 sudo git -C /scratch1/rocoto/develop/ checkout tags/1.3.4
-pushd /scratch1/rocoto/develop
 sudo ./INSTALL
 
 # Make a Module for rocoto
@@ -115,7 +115,7 @@ popd
 # Python Environment
 
 # Miniconda3 install
-mkdir -p ~/miniconda3
+mkdir ~/miniconda3
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 chmod +x ~/miniconda3/miniconda.sh
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
@@ -151,8 +151,7 @@ tar -xvf gst_model_data.tar.gz
 
 # add s3://gsl-ufs/missing/ data to correct directories ()
 # sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_update/
-
-# sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
+sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/co2dat_4a/
 
 # ====================================================================

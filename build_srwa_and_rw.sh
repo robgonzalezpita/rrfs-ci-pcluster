@@ -13,7 +13,8 @@ cd "$HOME"
 # Clone, Build, ./manage_externals/checkout_externals of UFS SRWA
 # git clone -b rrfs_ci https://github.com/NOAA-GSL/ufs-srweather-app.git
 git clone -b linux_target https://github.com/robgonzalezpita/ufs-srweather-app.git
-# which points to Christina's RRFS linux_target branch https://github.com/christinaholtNOAA/regional_workflow/tree/linux_target
+# points to Christina's RRFS linux_target branch https://github.com/christinaholtNOAA/regional_workflow/tree/linux_target
+# points to the develop branch of the ufs-weather-model https://github.com/ufs-community/ufs-weather-model
 cd ufs-srweather-app
 ./manage_externals/checkout_externals
 
@@ -69,6 +70,8 @@ cp ~/rrfs-ci-pcluster/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_
     # . /scratch1/apps/lmod/lmod/init/sh
     # ;;
 
+# cp ~/rrfs-ci-pcluster/load_modules_run_task.sh ~/ufs-srweather-app/regional_workflow/ush/load_modules_run_task.sh
+
 # #====================================================================
 # MPI ERRORS -  Debugging notes
 
@@ -78,15 +81,15 @@ cp ~/rrfs-ci-pcluster/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_
 # +RUN_CMD_FCST="srun"
 # +RUN_CMD_POST="srun"
 
-
 # Abort(1) on node 0 (rank 0 in comm 496): application called MPI_Abort(comm=0x84000002, 1) - process 0
 # srun: error: compute-dy-c5n18xlarge-1: tasks 0-11: Exited with exit code 1
-
 
 # export I_MPI_PMI_LIBRARY=/opt/slurm/lib/libpmi2.so
 # export I_MPI_PMI2=yes
 
 # #====================================================================
+
+# Generate the workflow
 
 source ../../env/wflow_linux.env
 ./generate_FV3LAM_wflow.sh
@@ -96,12 +99,7 @@ source ../../env/wflow_linux.env
 # Run the Workflow Using Rocoto
 # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
 
-
 cd $EXPTDIR
 ./launch_FV3LAM_wflow.sh
-
-# Add to crontab? (Or is this done automatically)
-*/1 * * * * cd /home/ubuntu/expt_dirs/pcluster_test && ./launch_FV3LAM_wflow.sh
-
 
 #====================================================================
