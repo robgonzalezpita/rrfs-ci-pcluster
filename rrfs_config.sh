@@ -8,6 +8,18 @@ EXPT_BASEDIR="/scratch1/expts_dir"
 WORKFLOW_MANAGER="rocoto"
 SCHED="slurm"
 
+# I_MPI_PMI_LIBRARY="/opt/slurm/lib/libpmi2.so"
+# I_MPI_PMI2="yes"
+# I_MPI_CC="icc"
+# I_MPI_ROOT="/opt/intel/compilers_and_libraries_2020.2.254/linux/mpi"
+# I_MPI_F90="ifort"
+# I_MPI_HYDRA_PMI_CONNECT="alltoall"
+# I_MPI_HYDRA_BRANCH_COUNT="128"
+# I_MPI_OFI_PROVIDER="tcp"
+
+# RUN_CMD_UTILS="srun"
+# RUN_CMD_FCST="srun"
+# RUN_CMD_POST="srun"
 
 LMOD_PATH="/scratch1/apps/lmod/lmod/init/bash"
 # LMOD_PATH="/scratch1/apps/lmod/lmod/init/sh"
@@ -48,11 +60,11 @@ CCPA_OBS_DIR="/path/to/processed/CCPA/data"
 MRMS_OBS_DIR="/path/to/processed/MRMS/data"
 NDAS_OBS_DIR="/path/to/processed/NDAS/data"
 
-NCORES_PER_NODE=8 
+NCORES_PER_NODE=8
 # NCORES_PER_NODE=36 # Up to 72 for c5n18xlarge instances?
 
 USE_CRON_TO_RELAUNCH="TRUE"
-CRON_RELAUNCH_INTVL_MNTS="02"
+CRON_RELAUNCH_INTVL_MNTS="01"
 
 PARTITION_DEFAULT="compute"
 QUEUE_DEFAULT="compute"
@@ -71,8 +83,6 @@ RUN_TASK_VX_GRIDSTAT="FALSE"
 RUN_TASK_VX_POINTSTAT="FALSE"
 RUN_TASK_VX_ENSGRID="FALSE"
 RUN_TASK_VX_ENSPOINT="FALSE"
-
-# RUN_CMD_FCST="mpriun -np 12"
 
 # The following are specifically for using the FSX mount of the /scratch1 dir (s3://gsl-ufs)
 # From PCLUSTER, cd /scratch1 && `tar -xvf gst_model_data.tar.gz`

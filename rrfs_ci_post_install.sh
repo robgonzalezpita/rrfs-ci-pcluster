@@ -77,15 +77,20 @@ echo "source /scratch1/apps/lmod/lmod/init/bash" >> ~/.bash_profile
 
 # HPC-STACK BUILD
 
+module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
+
 cd /scratch1
 source ~/.bash_profile
 mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
 sudo chmod 777 /tmp/hpc-stack
 git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
 pushd /tmp/hpc-stack
+
+
 mkdir /scratch1/hpc-stack
 sudo chmod 777 /scratch1/hpc-stack
 prefix=/scratch1/hpc-stack
+export HPC_MPI="impi/2019.8.254"
 yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
 ./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
 popd
@@ -132,15 +137,16 @@ unset CONDA_ENVS_PATH
 unset CONDA_PKGS_PATH
 
 conda env create -f ~/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
-conda env create -f ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
+# Do not create pygraf env. by default
+# conda env create -f ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
 
 # ensure the environments are set up correctly
 conda activate regional_workflow
 conda list 
 conda deactivate
-conda activate pygraf
-conda list
-conda deactivate
+# conda activate pygraf
+# conda list
+# conda deactivate
 
 #====================================================================
 
@@ -149,7 +155,7 @@ conda deactivate
 cd /scratch1
 tar -xvf gst_model_data.tar.gz
 
-# add s3://gsl-ufs/missing/ data to correct directories ()
+# add missing data from s3://gsl-ufs/ to correct directories on the Lustre FSX
 # sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_update/
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/co2dat_4a/
