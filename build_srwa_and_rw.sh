@@ -45,7 +45,7 @@ make -j4 >& build.out &
 
 cd ~/ufs-srweather-app/regional_workflow/ush
 cp ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
-# cp ~/rrfs-ci-pcluster/config_defaults.sh config_defaults.sh
+cp ~/rrfs-ci-pcluster/config_defaults.sh config_defaults.sh
 
 # Set up python environment in creating a ../../env/wflow_linux.env file in the R_W repo
 
@@ -64,6 +64,10 @@ cp ~/rrfs-ci-pcluster/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_
 # #====================================================================
 # MPI ERRORS -  Debugging notes
 
+# mpirun works well, srun does not
+
+# after generating the workflow, increase the time limit in the workflow xml file for the run_fcst task does not fix srun issues
+
 # In ush/config_defaults.sh, add the following (ln. 170,171)
 # +I_MPI_OFI_PROVIDER=""
 # +I_MPI_PMI_LIBRARY=""
@@ -74,25 +78,17 @@ cp ~/rrfs-ci-pcluster/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_
 # +I_MPI_HYDRA_PMI_CONNECT=""
 # +I_MPI_HYDRA_BRANCH_COUNT=""
 
-# Abort(1) on node 0 (rank 0 in comm 496): application called MPI_Abort(comm=0x84000002, 1) - process 0
-# srun: error: compute-dy-c5n18xlarge-1: tasks 0-11: Exited with exit code 1
-
-# module load intelmpi
-
-# module load libfabric
-
 # env | grep I_MPI
 
 # IN ~/ufs-srweather-app/regional_workflow/scripts/exregional_run_post.sh add 
 #    "LINUX")
-# +    ulimit -s unlimited
-# +    ulimit -a
+#      ulimit -a                        # report current limits
+#      ulimit -s unlimited              # stacksize
 #      APRUN=$RUN_CMD_POST
 #      ;;
 
 # In /ush/launch_FV3LAM_wflow.sh ???
 # +export I_MPI_PMI_LIBRARY=/opt/slurm/lib/libpmi2.so
-
 
 
 # #====================================================================

@@ -1,4 +1,4 @@
-# Parallel Cluster config file
+# Parallel Cluster Config File
 [aws]
 aws_region_name = us-east-1
 
@@ -11,15 +11,16 @@ cluster_template = default
 ssh = ssh {CFN_USER}@{MASTER_IP} {ARGS}
 
 [cluster default]
-key_name = <YOUR KEY NAME>
-base_os = ubuntu2004
+key_name = < AWS KEY PAIR NAME  >
+base_os = ubuntu2004 
 scheduler = slurm
-max_queue_size = 50
+max_queue_size = 50 
 maintain_initial_size = false
 vpc_settings = default
-master_instance_type = c5.xlarge
+master_instance_type = c5.18xlarge
 compute_instance_type = c5n.18xlarge
 master_root_volume_size = 80
+#enable_intel_hpc_platform = true
 compute_root_volume_size = 80
 placement = cluster
 #cluster_type = spot
@@ -38,8 +39,8 @@ compute_subnet_id = subnet-044ea96187bd4139d
 use_public_ips = false
 
 [fsx myfsx]
-# fsx_fs_id = fs-0c7266cca918033ba
 shared_dir = /scratch1
+#fsx_fs_id = fs-0c7266cca918033ba
 storage_capacity = 1200
 deployment_type = PERSISTENT_1
 per_unit_storage_throughput = 50

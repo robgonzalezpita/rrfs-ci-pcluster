@@ -45,10 +45,10 @@ source rrfs_ci_post_install.sh 2>&1 | tee rrfs_ci_post_install_build.out
 
 ## Build the model and run the workflow
 
-Follow the general outline of commented code in [post_install.sh](post_install.sh) to setup Python Environment, Clone ufs-srwa, [Generate the Workflow Experiment](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment), and [Run the Workflow Using Rocoto](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto)
+Follow the general outline of commented code in [build_srwa_and_rw.sh](build_srwa_and_rw.sh) clone the ufs-srwa, [Generate the Workflow Experiment](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment), and [Run the Workflow Using Rocoto](https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto).
 
 
-### Delete the PCluster:
+## Delete the PCluster:
 ```
 pcluster delete <clustername>
 ```

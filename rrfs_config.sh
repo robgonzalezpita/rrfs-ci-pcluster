@@ -17,9 +17,12 @@ SCHED="slurm"
 # I_MPI_HYDRA_BRANCH_COUNT="128"
 # I_MPI_OFI_PROVIDER="tcp"
 
-# RUN_CMD_UTILS="srun"
-# RUN_CMD_FCST="srun"
-# RUN_CMD_POST="srun"
+RUN_CMD_UTILS="srun --mpi=pmi2"
+RUN_CMD_FCST="srun --mpi=pmi2"
+RUN_CMD_POST="srun --mpi=pmi2"
+
+# Set the timeout limit for 2 hours for running the forecast
+WTIME_RUN_FCST="02:00:00"
 
 LMOD_PATH="/scratch1/apps/lmod/lmod/init/bash"
 # LMOD_PATH="/scratch1/apps/lmod/lmod/init/sh"
@@ -50,8 +53,6 @@ EXTRN_MDL_NAME_LBCS="FV3GFS"
 
 FV3GFS_FILE_FMT_ICS="grib2"
 FV3GFS_FILE_FMT_LBCS="grib2"
-
-WTIME_RUN_FCST="01:00:00"
 
 MODEL="FV3_GFS_v15p2_CONUS_25km"
 METPLUS_PATH="path/to/METPlus"

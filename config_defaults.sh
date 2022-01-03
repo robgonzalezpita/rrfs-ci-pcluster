@@ -172,6 +172,19 @@ RUN_CMD_POST="srun"
 #
 #-----------------------------------------------------------------------
 #
+# The following variables are set to nothing here, and specified in config.sh for debugging MPI errors
+#
+I_MPI_OFI_PROVIDER=""
+I_MPI_PMI_LIBRARY=""
+I_MPI_CC=""
+I_MPI_ROOT=""
+I_MPI_PMI2=""
+I_MPI_F90=""
+I_MPI_HYDRA_PMI_CONNECT=""
+I_MPI_HYDRA_BRANCH_COUNT=""
+#
+#-----------------------------------------------------------------------
+#
 # Set cron-associated parameters.  Definitions:
 #
 # USE_CRON_TO_RELAUNCH:
