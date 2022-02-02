@@ -17,15 +17,14 @@ SCHED="slurm"
 # I_MPI_HYDRA_BRANCH_COUNT="128"
 # I_MPI_OFI_PROVIDER="tcp"
 
-RUN_CMD_UTILS="srun --mpi=pmi2"
-RUN_CMD_FCST="srun --mpi=pmi2"
-RUN_CMD_POST="srun --mpi=pmi2"
+#RUN_CMD_UTILS="srun --mpi=pmi2"
+#RUN_CMD_FCST="srun --mpi=pmi2"
+#RUN_CMD_POST="srun --mpi=pmi2"
 
 # Set the timeout limit for 2 hours for running the forecast
 WTIME_RUN_FCST="02:00:00"
 
 LMOD_PATH="/scratch1/apps/lmod/lmod/init/bash"
-# LMOD_PATH="/scratch1/apps/lmod/lmod/init/sh"
 BUILD_ENV_FN="build_linux_intel.env"
 
 COMPILER="intel"
