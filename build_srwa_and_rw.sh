@@ -45,9 +45,9 @@ make -j4 >& build.out &
 
 cd ~/ufs-srweather-app/regional_workflow/ush
 cp ~/rrfs-ci-pcluster/rrfs_config.sh config.sh
-cp ~/rrfs-ci-pcluster/config_defaults.sh config_defaults.sh
+#cp ~/rrfs-ci-pcluster/config_defaults.sh config_defaults.sh
 
-# Set up python environment in creating a ../../env/wflow_linux.env file in the R_W repo
+# Set up python environment in copying the ../../env/wflow_linux.env file to the ufs-srwa repo
 
 cp ~/rrfs-ci-pcluster/wflow_linux.env ~/ufs-srweather-app/env/wflow_linux.env
 
@@ -103,7 +103,7 @@ source ../../env/wflow_linux.env
 # Run the Workflow Using Rocoto
 # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#run-the-workflow-using-rocoto
 
-cd $EXPTDIR
+cd /scratch1/expts_dir/pcluster_test
 ./launch_FV3LAM_wflow.sh
 
 #====================================================================
