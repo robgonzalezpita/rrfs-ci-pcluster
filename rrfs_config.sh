@@ -8,23 +8,13 @@ EXPT_BASEDIR="/scratch1/expts_dir"
 WORKFLOW_MANAGER="rocoto"
 SCHED="slurm"
 
-# I_MPI_PMI_LIBRARY="/opt/slurm/lib/libpmi2.so"
-# I_MPI_PMI2="yes"
-# I_MPI_CC="icc"
-# I_MPI_ROOT="/opt/intel/compilers_and_libraries_2020.2.254/linux/mpi"
-# I_MPI_F90="ifort"
-# I_MPI_HYDRA_PMI_CONNECT="alltoall"
-# I_MPI_HYDRA_BRANCH_COUNT="128"
-# I_MPI_OFI_PROVIDER="tcp"
-
 #RUN_CMD_UTILS="srun --mpi=pmi2"
 #RUN_CMD_FCST="srun --mpi=pmi2"
 #RUN_CMD_POST="srun --mpi=pmi2"
 
-# Set the timeout limit for 2 hours for running the forecast
 WTIME_RUN_FCST="02:00:00"
 
-LMOD_PATH="/scratch1/apps/lmod/lmod/init/bash"
+LMOD_PATH="/scratch1/apps/lmod/lmod/init/sh"
 BUILD_ENV_FN="build_linux_intel.env"
 
 COMPILER="intel"
@@ -60,8 +50,7 @@ CCPA_OBS_DIR="/path/to/processed/CCPA/data"
 MRMS_OBS_DIR="/path/to/processed/MRMS/data"
 NDAS_OBS_DIR="/path/to/processed/NDAS/data"
 
-NCORES_PER_NODE=8
-# NCORES_PER_NODE=36 # Up to 72 for c5n18xlarge instances?
+NCORES_PER_NODE=72
 
 USE_CRON_TO_RELAUNCH="TRUE"
 CRON_RELAUNCH_INTVL_MNTS="01"
