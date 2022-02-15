@@ -76,6 +76,8 @@ RUN_TASK_VX_ENSPOINT="FALSE"
 # The following are specifically for using the FSX mount of the /scratch1 dir (s3://gsl-ufs)
 # From PCLUSTER, cd /scratch1 && `tar -xvf gst_model_data.tar.gz`
 FIXgsm=${FIXgsm:-"/scratch1/fix/fix_am"}
+FIXaer=${FIXaer:-"/scratch1/fix/fix_aer"}
+FIXlut=${FIXlut:-"/scratch1/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/scratch1/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch1"}
