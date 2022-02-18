@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script will serve as the post-install for AWS PCluster (Ubuntu 20.04)
 # Use of hpc stack to install all dependencies to UFS SRWA and RRFS for automated testing
@@ -12,6 +12,8 @@
 # continous integration tests for the regional_workflow
 
 #====================================================================
+
+sudo -i -u ubuntu bash << EOF
 
 # Update & General Dependencies 
 echo "Starting rrfs_ci_post_install.sh"
@@ -80,36 +82,7 @@ echo "source /scratch1/apps/lmod/lmod/init/bash" >> ~/.bash_profile
 # If running interactive shell 
 # echo "source /scratch1/apps/lmod/lmod/init/profile" >> ~/.bashrc
 
-# Verify Lua is the default module version
-module -v
-
-#====================================================================
-
-# HPC-STACK BUILD
-echo "Installing HPC-STACK"
-
-module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
-
-cd /scratch1
-source ~/.bash_profile
-mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
-sudo chmod 777 /tmp/hpc-stack
-git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
-pushd /tmp/hpc-stack
-
-
-mkdir /scratch1/hpc-stack
-sudo chmod 777 /scratch1/hpc-stack
-prefix=/scratch1/hpc-stack
-export HPC_MPI="impi/2019.8.254"
-yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
-./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
-popd
-sudo rm -rf /tmp/hpc-stack
-
-echo "Finished with HPC-STACK install"
-
-#=================================================================
+# ====================================================================
 
 # Clone & Install Rocoto
 echo "Installing Rocoto"
@@ -159,7 +132,7 @@ conda env create -f ~/miniconda3/contrib_miniconda3/environments/regional_workfl
 
 # ensure the environments are set up correctly
 conda activate regional_workflow
-conda list 
+conda list
 conda deactivate
 # conda activate pygraf
 # conda list
@@ -173,10 +146,46 @@ cd /scratch1
 tar -xvf gst_model_data.tar.gz
 
 # add missing data from s3://gsl-ufs/ to correct directories on the Lustre FSX
-# sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_update/
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/co2dat_4a/
 
 # ====================================================================
 
-echo "rrfs_ci_post_install_pcluster script finished"
+# Clone repo with auxiliary config files for RRFS
+
+cd /home/ubuntu
+git clone -b main https://github.com/robgonzalezpita/rrfs-ci-pcluster.git
+
+EOF
+
+#====================================================================
+
+# HPC-STACK BUILD
+echo "Installing HPC-STACK"
+
+# Export MODULEPATH to root user
+export MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/$MODULE_VERSION/modulefiles:/usr/share/modules/modulefiles:/opt/intel/impi/2019.8.254/intel64/modulefiles:/scratch1/apps/modulefiles/Linux:/scratch1/apps/modulefiles/Core:/scratch1/apps/lmod/lmod/modulefiles/Core
+
+module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
+module list
+
+cd /scratch1
+source ~/.bash_profile
+mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
+sudo chmod 777 /tmp/hpc-stack
+git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
+pushd /tmp/hpc-stack
+
+
+mkdir /scratch1/hpc-stack
+sudo chmod 777 /scratch1/hpc-stack
+prefix=/scratch1/hpc-stack
+export HPC_MPI="impi/2019.8.254"
+yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
+./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
+popd
+sudo rm -rf /tmp/hpc-stack
+
+echo "Finish with HPC-STACK install"
+
+#=================================================================

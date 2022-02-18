@@ -41,7 +41,7 @@ rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
 sudo apt-get update
 sudo apt-get install -y intel-oneapi-dev-utilities intel-oneapi-mpi-devel intel-oneapi-openmp intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic
-echo "source /opt/intel/oneapi/setvars.sh" >> ~/.bash_profile
+echo "source /opt/intel/oneapi/setvars.sh" >> /home/ubuntu/.bash_profile
 
 #====================================================================
 
@@ -76,7 +76,7 @@ make install
 
 sudo ln -s /scratch1/apps/lmod/lmod/init/profile /etc/profile.d/z00_lmod.sh
 
-echo "source /scratch1/apps/lmod/lmod/init/bash" >> ~/.bash_profile
+echo "source /scratch1/apps/lmod/lmod/init/bash" >> /home/ubuntu/.bash_profile
 # If running interactive shell 
 # echo "source /scratch1/apps/lmod/lmod/init/profile" >> ~/.bashrc
 
@@ -88,10 +88,14 @@ module -v
 # HPC-STACK BUILD
 echo "Installing HPC-STACK"
 
+# Export MODULEPATH to root user
+export MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/$MODULE_VERSION/modulefiles:/usr/share/modules/modulefiles:/opt/intel/impi/2019.8.254/intel64/modulefiles:/scratch1/apps/modulefiles/Linux:/scratch1/apps/modulefiles/Core:/scratch1/apps/lmod/lmod/modulefiles/Core
+
 module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
+module list
 
 cd /scratch1
-source ~/.bash_profile
+source /home/ubuntu/.bash_profile
 mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
 sudo chmod 777 /tmp/hpc-stack
 git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
@@ -137,12 +141,12 @@ popd
 
 echo "Installing Miniconda3"
 
-mkdir ~/miniconda3
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-chmod +x ~/miniconda3/miniconda.sh
-bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-rm -rf ~/miniconda3/miniconda.sh
-~/miniconda3/bin/conda init bash
+mkdir /home/ubuntu/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /home/ubuntu/miniconda3/miniconda.sh
+chmod +x /home/ubuntu/miniconda3/miniconda.sh
+bash /home/ubuntu/miniconda3/miniconda.sh -b -u -p /home/ubuntu/miniconda3
+rm -rf /home/ubuntu/miniconda3/miniconda.sh
+/home/ubuntu/miniconda3/bin/conda init bash
 
 # Make miniconda3 module, regional_workflow & pygraf environments
 cd ~/miniconda3
