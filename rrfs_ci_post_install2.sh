@@ -88,14 +88,15 @@ module -v
 # HPC-STACK BUILD
 echo "Installing HPC-STACK"
 
+source /scratch1/apps/lmod/lmod/init/bash
 # Export MODULEPATH to root user
 export MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/$MODULE_VERSION/modulefiles:/usr/share/modules/modulefiles:/opt/intel/impi/2019.8.254/intel64/modulefiles:/scratch1/apps/modulefiles/Linux:/scratch1/apps/modulefiles/Core:/scratch1/apps/lmod/lmod/modulefiles/Core
+export MODULESHOME=/scratch1/apps/lmod/lmod
 
 module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
 module list
 
 cd /scratch1
-source /home/ubuntu/.bash_profile
 mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
 sudo chmod 777 /tmp/hpc-stack
 git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
@@ -149,17 +150,17 @@ rm -rf /home/ubuntu/miniconda3/miniconda.sh
 /home/ubuntu/miniconda3/bin/conda init bash
 
 # Make miniconda3 module, regional_workflow & pygraf environments
-cd ~/miniconda3
+cd /home/ubuntu/miniconda3
 git clone -b rrfs_ci https://github.com/robgonzalezpita/contrib_miniconda3.git
-module use -a ~/miniconda3/contrib_miniconda3/modulefiles
+module use -a /home/ubuntu/miniconda3/contrib_miniconda3/modulefiles
 module load miniconda3/4.11.0
 
 unset CONDA_ENVS_PATH
 unset CONDA_PKGS_PATH
 
-conda env create -f ~/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
+conda env create -f /home/ubuntu/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
 # Do not create pygraf env. by default
-# conda env create -f ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
+# conda env create -f /home/ubuntu/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
 
 # ensure the environments are set up correctly
 conda activate regional_workflow
