@@ -163,14 +163,15 @@ EOF
 # HPC-STACK BUILD
 echo "Installing HPC-STACK"
 
+source /scratch1/apps/lmod/lmod/init/bash
 # Export MODULEPATH to root user
 export MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/$MODULE_VERSION/modulefiles:/usr/share/modules/modulefiles:/opt/intel/impi/2019.8.254/intel64/modulefiles:/scratch1/apps/modulefiles/Linux:/scratch1/apps/modulefiles/Core:/scratch1/apps/lmod/lmod/modulefiles/Core
+export MODULESHOME=/scratch1/apps/lmod/lmod
 
 module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
 module list
 
 cd /scratch1
-source ~/.bash_profile
 mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
 sudo chmod 777 /tmp/hpc-stack
 git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
