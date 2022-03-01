@@ -158,14 +158,18 @@ git clone -b main https://github.com/robgonzalezpita/rrfs-ci-pcluster.git
 
 EOF
 
-#====================================================================
+echo "source /opt/intel/oneapi/setvars.sh" >> ~root/.bashrc
 
+#====================================================================
 # HPC-STACK BUILD
 echo "Installing HPC-STACK"
 
 source /scratch1/apps/lmod/lmod/init/bash
-# Export MODULEPATH to root user
-export MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/$MODULE_VERSION/modulefiles:/usr/share/modules/modulefiles:/opt/intel/impi/2019.8.254/intel64/modulefiles:/scratch1/apps/modulefiles/Linux:/scratch1/apps/modulefiles/Core:/scratch1/apps/lmod/lmod/modulefiles/Core
+source /opt/intel/oneapi/setvars.sh
+source ~root/.bashrc
+
+# Export lmod and compiler env variables
+export MODULEPATH=/etc/environment-modules/modules:/usr/share/modules/versions:/usr/share/modules/modulefiles:/opt/intel/impi/2019.8.254/intel64/modulefiles:/scratch1/apps/modulefiles/Linux:/scratch1/apps/modulefiles/Core:/scratch1/apps/lmod/lmod/modulefiles/Core
 export MODULESHOME=/scratch1/apps/lmod/lmod
 
 module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
@@ -177,7 +181,6 @@ sudo chmod 777 /tmp/hpc-stack
 git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
 pushd /tmp/hpc-stack
 
-
 mkdir /scratch1/hpc-stack
 sudo chmod 777 /scratch1/hpc-stack
 prefix=/scratch1/hpc-stack
@@ -185,7 +188,7 @@ export HPC_MPI="impi/2019.8.254"
 yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
 ./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
 popd
-sudo rm -rf /tmp/hpc-stack
+#sudo rm -rf /tmp/hpc-stack
 
 echo "Finish with HPC-STACK install"
 
