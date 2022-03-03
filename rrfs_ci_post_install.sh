@@ -105,7 +105,7 @@ export HPC_MPI="impi/2019.8.254"
 yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
 ./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
 popd
-sudo rm -rf /tmp/hpc-stack
+#sudo rm -rf /tmp/hpc-stack
 
 echo "Finished with HPC-STACK install"
 
@@ -173,7 +173,6 @@ cd /scratch1
 tar -xvf gst_model_data.tar.gz
 
 # add missing data from s3://gsl-ufs/ to correct directories on the Lustre FSX
-# sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_update/
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/co2dat_4a/
 

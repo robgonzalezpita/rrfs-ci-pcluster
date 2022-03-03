@@ -18,6 +18,8 @@ cd ufs-srweather-app
 
 # Set up the Build Environment
 
+source /scratch1/apps/lmod/lmod/init/bash
+
 # source /scratch1/build_linux_intel.env
 source ~/rrfs-ci-pcluster/build_linux_intel.env
 
@@ -25,19 +27,7 @@ mkdir build && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=.. | tee log.cmake
 make -j4 >& build.out &
 
-# #====================================================================
-
-# # Untar data from s3 (either done here or in post_install script)
-
-# cd /scratch1
-# tar -xvf gst_model_data.tar.gz
-
-# # add s3://gsl-ufs/missing/ data to correct directories ()
-# sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/
-# sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
-# sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/co2dat_4a/
-
-# # ====================================================================
+#====================================================================
 
 # Generate Workflow Experiment following these steps:
 # https://ufs-srweather-app.readthedocs.io/en/ufs-v1.0.1/Quickstart.html#generate-the-workflow-experiment
@@ -53,45 +43,7 @@ cp ~/rrfs-ci-pcluster/wflow_linux.env ~/ufs-srweather-app/env/wflow_linux.env
 
 cp ~/rrfs-ci-pcluster/build_linux_intel.env ~/ufs-srweather-app/env/build_linux_intel.env
 
-# add following to ~/ufs-srweather-app/regional_workflow/ush/load_modules_run_task.sh (line 105)?
-#
-#   "LINUX")
-    # . /scratch1/apps/lmod/lmod/init/sh
-    # ;;
-
-# cp ~/rrfs-ci-pcluster/load_modules_run_task.sh ~/ufs-srweather-app/regional_workflow/ush/load_modules_run_task.sh
-
-# #====================================================================
-# MPI ERRORS -  Debugging notes
-
-# mpirun works well, srun does not
-
-# after generating the workflow, increase the time limit in the workflow xml file for the run_fcst task does not fix srun issues
-
-# In ush/config_defaults.sh, add the following (ln. 170,171)
-# +I_MPI_OFI_PROVIDER=""
-# +I_MPI_PMI_LIBRARY=""
-# +I_MPI_CC=""
-# +I_MPI_ROOT=""
-# +I_MPI_PMI2=""
-# +I_MPI_F90=""
-# +I_MPI_HYDRA_PMI_CONNECT=""
-# +I_MPI_HYDRA_BRANCH_COUNT=""
-
-# env | grep I_MPI
-
-# IN ~/ufs-srweather-app/regional_workflow/scripts/exregional_run_post.sh add 
-#    "LINUX")
-#      ulimit -a                        # report current limits
-#      ulimit -s unlimited              # stacksize
-#      APRUN=$RUN_CMD_POST
-#      ;;
-
-# In /ush/launch_FV3LAM_wflow.sh ???
-# +export I_MPI_PMI_LIBRARY=/opt/slurm/lib/libpmi2.so
-
-
-# #====================================================================
+#====================================================================
 
 # Generate the workflow
 
