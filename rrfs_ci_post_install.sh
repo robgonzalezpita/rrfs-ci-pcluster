@@ -170,7 +170,7 @@ conda deactivate
 # Untar data from s3
 
 cd /scratch1
-tar -xvf gst_model_data.tar.gz
+sudo tar -xvf gst_model_data.tar.gz
 
 # add missing data from s3://gsl-ufs/ to correct directories on the Lustre FSX
 sudo cp /scratch1/global_co2historicaldata_2021.txt /scratch1/fix/fix_am/fix_co2_proj/
