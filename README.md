@@ -19,7 +19,7 @@ pcluster create <clustername>
 
 SSH into the cluster:
 ```
-ssh ubuntu@<ip_address>
+ssh -i <certificate pem file> ubuntu@<ip_address>
 ```
 
 You will get a message about the authenticity of the host, enter `yes`.
