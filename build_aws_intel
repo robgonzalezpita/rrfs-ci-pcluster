@@ -1,0 +1,27 @@
+#%Module
+  
+proc ModulesHelp { } {
+   puts stderr "This module loads libraries for building SRW on"
+   puts stderr "AWS using IntelOneAPI"
+}
+
+module-whatis "Loads libraries needed for building SRW on AWS"
+
+module purge
+
+module use /scratch1/hpc-stack/modulefiles/stack
+module load hpc
+module load hpc-intel
+module load hpc-impi
+module load cmake/3.20.1
+
+module load srw_common
+
+module use /opt/intel/impi/2019.8.254/intel64/modulefiles
+module load intelmpi
+
+
+setenv CMAKE_C_COMPILER mpiicc
+setenv CMAKE_CXX_COMPILER mpiicpc
+setenv CMAKE_Fortran_COMPILER mpiifort
+setenv CMAKE_Platform aws.intel

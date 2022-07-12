@@ -88,10 +88,9 @@ module -v
 # HPC-STACK BUILD
 echo "Installing HPC-STACK"
 
-module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
-
 cd /scratch1
 source ~/.bash_profile
+module load intelmpi # Load the intelmpi module shipped with PCluster v 2.11 to build HPC stack with the correct IMPI version
 mkdir /tmp/hpc-stack && cd /tmp/hpc-stack
 sudo chmod 777 /tmp/hpc-stack
 git clone -b rrfs-ci https://github.com/robgonzalezpita/hpc-stack.git /tmp/hpc-stack
@@ -100,7 +99,7 @@ sudo chmod 777 /scratch1/hpc-stack
 prefix=/scratch1/hpc-stack
 export HPC_MPI="impi/2019.8.254"
 yes | ./setup_modules.sh -c config/config_pcluster.sh -p "$prefix"
-./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m 
+./build_stack.sh -p "$prefix" -c config/config_pcluster.sh -y stack/stack_rrfs_ci.yaml -m
 #sudo rm -rf /tmp/hpc-stack
 
 echo "Finished with HPC-STACK install"
@@ -133,23 +132,23 @@ popd
 
 echo "Installing Miniconda3"
 
-mkdir ~/miniconda3
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-chmod +x ~/miniconda3/miniconda.sh
-bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-rm -rf ~/miniconda3/miniconda.sh
-~/miniconda3/bin/conda init bash
+mkdir /scratch1/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /scratch1/miniconda3/miniconda.sh
+chmod +x /scratch1/miniconda3/miniconda.sh
+bash /scratch1/miniconda3/miniconda.sh -b -u -p /scratch1/miniconda3
+rm -rf /scratch1/miniconda3/miniconda.sh
+/scratch1/miniconda3/bin/conda init bash
 
 # Make miniconda3 module, regional_workflow & pygraf environments
-cd ~/miniconda3
+cd /scratch1/miniconda3
 git clone -b rrfs_ci https://github.com/robgonzalezpita/contrib_miniconda3.git
-module use -a ~/miniconda3/contrib_miniconda3/modulefiles
-module load miniconda3/4.11.0
+module use -a /scratch1/miniconda3/contrib_miniconda3/modulefiles
+module load miniconda3
 
 unset CONDA_ENVS_PATH
 unset CONDA_PKGS_PATH
 
-conda env create -f ~/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
+conda env create -f /scratch1/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
 # Do not create pygraf env. by default
 # conda env create -f ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
 
