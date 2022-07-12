@@ -143,7 +143,7 @@ rm -rf /scratch1/miniconda3/miniconda.sh
 cd /scratch1/miniconda3
 git clone -b rrfs_ci https://github.com/robgonzalezpita/contrib_miniconda3.git
 module use -a /scratch1/miniconda3/contrib_miniconda3/modulefiles
-module load miniconda3
+module load miniconda3/4.11.0
 
 unset CONDA_ENVS_PATH
 unset CONDA_PKGS_PATH
