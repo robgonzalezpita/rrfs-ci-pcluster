@@ -150,7 +150,7 @@ unset CONDA_PKGS_PATH
 
 conda env create -f /scratch1/miniconda3/contrib_miniconda3/environments/regional_workflow.yml
 # Do not create pygraf env. by default
-# conda env create -f ~/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
+# conda env create -f /scratch1/miniconda3/contrib_miniconda3/environments/pygraf-rrfs-ci.yml
 
 # ensure the environments are set up correctly
 conda activate regional_workflow
